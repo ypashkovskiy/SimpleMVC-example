@@ -23,7 +23,7 @@ class UserModel extends Model
     /**
     * @var string роль пользователя
     */
-    protected $role = null;
+    public $role = null;
     
     public $email = null;
     
@@ -67,23 +67,41 @@ class UserModel extends Model
     
     public function update()
     {
-        $sql = "UPDATE $this->tableName SET timestamp=:timestamp, login=:login, pass=:pass, email=:email  WHERE id = :id";  
-        $st = $this->pdo->prepare ( $sql );
-        
-        $st->bindValue( ":timestamp", (new \DateTime('NOW'))->format('Y-m-d H:i:s'), \PDO::PARAM_STMT);
-        $st->bindValue( ":login", $this->login, \PDO::PARAM_STR );
-        
-        // Хеширование пароля
-        $this->salt = rand(0,1000000);
-        //$st->bindValue( ":salt", $this->salt, \PDO::PARAM_STR );
-        //$this->pass .= $this->salt;
-        //$hashPass = password_hash($this->pass, PASSWORD_BCRYPT);
-        $st->bindValue( ":pass", $this->pass, \PDO::PARAM_STR );
-        
-        //$st->bindValue( ":role", $this->role, \PDO::PARAM_STR );
-        $st->bindValue( ":email", $this->email, \PDO::PARAM_STR );
-        $st->bindValue( ":id", $this->id, \PDO::PARAM_INT );
-        $st->execute();
+       // 1. Базовые поля, которые обновляются всегда
+     $fields = [
+         "timestamp = :timestamp",
+         "login = :login",
+         "role = :role",
+         "email = :email"
+        ];
+
+      // 2. Добавляем пароль только если он не пустой
+    if (!empty($this->pass)) {
+       $fields[] = "salt = :salt";
+       $fields[] = "pass = :pass";
+    }
+
+    // 3. Собираем SQL
+       $sql = "UPDATE {$this->tableName} SET " . implode(", ", $fields) . " WHERE id = :id";
+       $st = $this->pdo->prepare($sql);
+
+    // 4. Привязываем обязательные параметры
+       $st->bindValue(":timestamp", (new \DateTime('NOW'))->format('Y-m-d H:i:s'), \PDO::PARAM_STR);
+       $st->bindValue(":login", $this->login, \PDO::PARAM_STR);
+       $st->bindValue(":role", $this->role, \PDO::PARAM_STR);
+       $st->bindValue(":email", $this->email, \PDO::PARAM_STR);
+       $st->bindValue(":id", $this->id, \PDO::PARAM_INT);
+
+    // 5. Привязываем пароль и соль только если они есть
+    if (!empty($this->pass)) {
+       $this->salt = (string)rand(0, 1000000);
+       $hashPass = password_hash($this->pass . $this->salt, PASSWORD_BCRYPT);
+    
+       $st->bindValue(":salt", $this->salt, \PDO::PARAM_STR);
+       $st->bindValue(":pass", $hashPass, \PDO::PARAM_STR);
+    }
+
+       $st->execute();
     }
     
     /**
