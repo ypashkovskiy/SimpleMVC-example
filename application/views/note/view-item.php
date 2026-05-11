@@ -22,3 +22,36 @@ $User = Config::getObject('core.user.class');
 <p>Контент: <?= $viewNotes->content ?></p>
 <p>Зарегестрирована: <?= $viewNotes->publicationDate ?></p>
 
+<p> Категория: <?= $viewCategories->name ?> </p>
+<p> Под Категория: <?= $viewsubcategories->name?> </p>
+
+<p> Автор: 
+<?php 
+$userLogins = []; 
+foreach ($viewUser as $user) { 
+    $selected = false; 
+    foreach ($viewNotesUser as $noteuser) { 
+        if ($noteuser->users_id == $user->id) { 
+            $selected = true; 
+            break; 
+        } 
+    } 
+    if ($selected) { 
+        $userLogins[] = $user->login; 
+    } 
+} 
+echo implode(', ', $userLogins); 
+?> 
+</p>
+
+<p> Активный:
+    <?php
+          if($viewNotes->active==1){
+            echo "Да";
+          } else {
+             echo "Нет";
+          }
+          
+       ?>
+      </td>  
+</p>

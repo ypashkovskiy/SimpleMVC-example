@@ -30,7 +30,20 @@ $User = Config::getObject('core.user.class');
             <a class="nav-link" href="<?= WebRouter::link("admin/adminusers/index") ?>"> Пользователи </a>
         </li>
         <?php endif; ?>
-        
+
+       <?php  if ($User->isAllowed("admin/adminusers/index")): ?>
+        <li class="nav-item ">
+            <a class="nav-link" href="<?= WebRouter::link("admin/categories/index") ?>"> Категории </a>
+        </li>
+        <?php endif; ?>
+
+        <?php  if ($User->isAllowed("admin/adminusers/index")): ?>
+        <li class="nav-item ">
+            <a class="nav-link" href="<?= WebRouter::link("admin/subcategories/index") ?>"> Под Категории </a>
+        </li>
+        <?php endif; ?>
+
+               
         <?php  if ($User->isAllowed("admin/adminusers/index")): ?>
         <li class="nav-item ">
             <a class="nav-link" href="<?= WebRouter::link("admin/notes/index") ?>"> Заметки </a>

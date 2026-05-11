@@ -1,9 +1,3 @@
-<?php 
-
-use application\assets\DemoJavascriptAsset;
-DemoJavascriptAsset::add();
-
-?>
 <div class="row">
     <div class="col"><h1 class="callAlert"><?php echo $homepageTitle ?></h1>
         </div>
@@ -18,7 +12,9 @@ DemoJavascriptAsset::add();
 <div class="container">
 
  <ul id="headlines">
-    <?php foreach ($viewNotes['results'] as $note) { ?>
+
+<h1><?php echo $viewsubcategories->name; ?></h1>
+    <?php foreach ($viewNotes as $note) { ?>
          <li class='<?php echo $note->id?>'> 
             
                 
@@ -35,16 +31,6 @@ DemoJavascriptAsset::add();
                 <?php } ?>
                 </div>
                
-               <div> <?php if (isset($note->subcategoriesid)) { ?>
-               <span class="subcategory">
-                      in 
-                      <a href="<?php echo \ItForFree\SimpleMVC\Router\WebRouter::link("homepage/subcategory&subcategoriesid=" . $note->subcategoriesid); ?>"> 
-                       <?=$subcategoriesList[$note->subcategoriesid] ?? 'Без под категории' ?>
-                      </a>  
-                </span>    
-                <?php } ?> 
-                </div>
-
                 <h1> <span class="title">
                      <a href="<?php echo \ItForFree\SimpleMVC\Router\WebRouter::link("homepage/edit&id=" . $note->id); ?>">
                         <?php echo htmlspecialchars($note->title); ?>
@@ -88,28 +74,17 @@ DemoJavascriptAsset::add();
                        ?>
                 </div>
 
-                <a href="<?php echo \ItForFree\SimpleMVC\Router\WebRouter::link("homepage/edit&id=" . $note->id); ?>" 
+                <a href="<?php echo \ItForFree\SimpleMVC\Router\WebRouter::link("admin/homepage/edit", ['noteid' => $note->id]); ?>" 
                 class="showContent" data-contentId="<?php echo $note->id?>">Показать полностью</a>
                  
 
             </div>
                        
-            <ul class="ajax-load">
-                <li><a href="<?php echo \ItForFree\SimpleMVC\Router\WebRouter::link("homepage/notepost", ['noteid' => $note->id]); ?>" 
-                class="ajaxNoteBodyByPost" data-contentId="<?php echo $note->id?>">Показать продолжение (POST)</a></li>
-
-                <li><a href="<?php echo \ItForFree\SimpleMVC\Router\WebRouter::link("homepage/noteget", ['noteid' => $note->id]); ?>" 
-                class="ajaxNoteBodyByGet" data-contentId="<?php echo $note->id?>">Показать продолжение (GET)</a></li>
-
-              
-            </ul>
-
-           
+                       
     <?php } ?>
     </ul>
 
-          <p><?php echo $viewNotes['totalRows']?> notes in total</p>
-          <p><a href="<?php echo \ItForFree\SimpleMVC\Router\WebRouter::link("homepage/allnotes" ); ?>" class="all-notes-link">All notes</a></p>
+      <p><a href="<?php echo \ItForFree\SimpleMVC\Router\WebRouter::link("homepage/index" ); ?>" class="all-notes-link">Return to Homepage</a></p>
     </div> 
 
 

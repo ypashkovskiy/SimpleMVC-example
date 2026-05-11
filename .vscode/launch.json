@@ -10,6 +10,32 @@
             "request": "launch",
             "port": 9003
         },
+
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome ",
+            "url": "http://simplemvc.loc/",
+            "webRoot": "${workspaceFolder}/web",
+            "sourceMaps": true
+        },
+        {
+            
+             "name": "Launch Firefox",
+             "type": "firefox",
+             "request": "launch",
+             "url": "http://simplemvc.loc",
+             "webRoot": "${workspaceFolder}",
+             "reAttach": true,
+             "pathMappings": [
+             {
+             "url": "http://simplemvc.loc",
+             "path": "${workspaceFolder}/web"
+             }
+          },
+
+
+
         {
             "name": "Launch currently open script",
             "type": "php",
